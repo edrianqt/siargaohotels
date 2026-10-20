@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}{{ page.title }} - {{ S.site_name }}{% endblock %}
+{% block description %}{{ page.seo_description or (page.body | striptags | truncate(160)) }}{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb small"><li class="breadcrumb-item"><a href="{{ url_for('public.home') }}">Home</a></li><li class="breadcrumb-item active">{{ page.title }}</li></ol></nav>
+    <h1>{{ page.title }}</h1>
+  </div>
+</section>
+<section class="section pt-4"><div class="container narrow"><div class="prose">{{ page.body | safe }}</div></div></section>
+{% endblock %}

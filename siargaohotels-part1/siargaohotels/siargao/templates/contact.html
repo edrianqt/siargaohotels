@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Contact - {{ S.site_name }}{% endblock %}
+{% block description %}How can we help? Please complete the form and let us know how we can support your trip. {{ S.phone }} {{ S.email }} {{ S.address }}{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb small"><li class="breadcrumb-item"><a href="{{ url_for('public.home') }}">Home</a></li><li class="breadcrumb-item active">Contact</li></ol></nav>
+    <h1>Contact</h1>
+  </div>
+</section>
+<section class="section pt-4">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-5">
+        <h2>How can we help?</h2>
+        <p>Please complete the form and let us know how we can support your trip. A member of our team will personally reach out once we receive your details.</p>
+        <ul class="contact-list">
+          <li><i class="bi bi-telephone"></i><a href="tel:{{ S.phone }}">{{ S.phone }}</a></li>
+          <li><i class="bi bi-envelope"></i><a href="mailto:{{ S.email }}">{{ S.email }}</a></li>
+          <li><i class="bi bi-geo-alt"></i><span>{{ S.address }}</span></li>
+        </ul>
+        <div class="map-embed mt-4"><iframe title="Office map" loading="lazy" src="https://www.google.com/maps?q={{ S.address | urlencode }}&output=embed"></iframe></div>
+      </div>
+      <div class="col-lg-7">
+        <form method="post" class="form-card">
+          <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+          <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <div class="row g-3">
+            <div class="col-md-6"><label class="form-label" for="c-name">Name</label><input id="c-name" name="name" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label" for="c-email">Email</label><input id="c-email" type="email" name="email" class="form-control" required></div>
+            <div class="col-md-6"><label class="form-label" for="c-phone">Phone Number</label><input id="c-phone" name="phone" class="form-control"></div>
+            <div class="col-md-6"><label class="form-label" for="c-address">Address</label><input id="c-address" name="address" class="form-control"></div>
+            <div class="col-12"><label class="form-label" for="c-msg">Message</label><textarea id="c-msg" name="message" rows="6" class="form-control" required></textarea></div>
+          </div>
+          <button class="btn btn-brand btn-lg mt-3">Submit</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

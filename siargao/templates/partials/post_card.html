@@ -1,0 +1,10 @@
+<article class="card post-card h-100">
+  <a href="{{ url_for('public.page_or_post', slug=p.slug) }}" class="card-img-wrap">
+    {% if p.image_url %}<img src="{{ p.image_url }}" alt="{{ p.title }}" loading="lazy">{% else %}<div class="img-placeholder"><i class="bi bi-journal-text"></i></div>{% endif %}
+  </a>
+  <div class="card-body">
+    {% if p.category_name %}<a class="post-cat" href="{{ url_for('public.category', slug=p.category_slug) }}">{{ p.category_name }}</a>{% endif %}
+    <h3 class="card-title"><a href="{{ url_for('public.page_or_post', slug=p.slug) }}">{{ p.title }}</a></h3>
+    <p class="text-muted small mb-0">{{ p.published_at | datefmt }}</p>
+  </div>
+</article>

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ S.site_name }} &amp; Resorts | Hotels Siargao Philippines{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ default_description }}{% endblock %}">
+  <meta name="theme-color" content="#0B3C49">
+  <link rel="canonical" href="{{ request.base_url }}">
+  <meta property="og:site_name" content="{{ S.site_name }}">
+  <meta property="og:title" content="{{ self.title() | striptags }}">
+  <meta property="og:description" content="{{ self.description() | striptags | trim }}">
+  <meta property="og:url" content="{{ request.base_url }}">
+  {% block og_image %}{% endblock %}
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="icon" href="{{ S.favicon_url }}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+  {% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+
+<header class="site-header {% block header_class %}{% endblock %}">
+  <nav class="navbar navbar-expand-lg">
+    <div class="container">
+      <a class="navbar-brand" href="{{ url_for('public.home') }}">
+        <img src="{{ S.logo_url }}" alt="{{ S.site_name }}" class="logo logo-dark">
+        <img src="{{ S.logo_white_url }}" alt="" aria-hidden="true" class="logo logo-light">
+      </a>
+      <div class="d-flex align-items-center gap-2 order-lg-3">
+        <a href="{{ url_for('public.wishlist') }}" class="btn btn-icon position-relative wishlist-link" aria-label="Saved places">
+          <i class="bi bi-heart"></i><span class="cart-badge wish-count" hidden></span>
+        </a>
+        <a href="{{ url_for('cart.view') }}" class="btn btn-icon position-relative" aria-label="Your cart">
+          <i class="bi bi-bag"></i>
+          {% if cart_count %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                aria-controls="mainNav" aria-expanded="false" aria-label="Menu">
+          <i class="bi bi-list fs-2"></i>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse order-lg-2" id="mainNav">
+        <ul class="navbar-nav mx-auto">
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.home') }}">Home</a></li>
+          {% for k, m in KINDS.items() %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.archive', archive=m.archive) }}">{{ m.plural }}</a></li>
+          {% endfor %}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Locations</a>
+            <ul class="dropdown-menu">
+              {% for loc in nav_locations %}
+              <li><a class="dropdown-item" href="{{ url_for('public.location', slug=loc.slug) }}">{{ loc.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('public.contact') }}">Contact</a></li>
+        </ul>
+        <ul class="navbar-nav auth-links">
+          {% if g.user %}
+            {% if g.user.is_admin %}<li class="nav-item"><a class="nav-link" href="{{ url_for('admin.dashboard') }}"><i class="bi bi-speedometer2"></i> Dashboard</a></li>{% endif %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.account') }}"><i class="bi bi-person-circle"></i> {{ g.user.name.split()[0] }}</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.logout') }}">Log out</a></li>
+          {% else %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('auth.login') }}">Login</a></li>
+            <li class="nav-item"><a class="btn btn-brand btn-sm ms-lg-2" href="{{ url_for('auth.signup') }}">Sign Up</a></li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+</header>
+
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}
+  <div class="flash-wrap container">
+    {% for cat, msg in msgs %}
+    <div class="alert alert-{{ cat if cat != 'message' else 'info' }} alert-dismissible fade show" role="alert">
+      {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<main>{% block content %}{% endblock %}</main>
+
+<section class="newsletter" id="newsletter">
+  <div class="container">
+    <div class="newsletter-box">
+      <div class="d-flex align-items-center gap-3">
+        <i class="bi bi-envelope-paper-heart newsletter-icon"></i>
+        <div>
+          <h3 class="h5 mb-1">Exclusive Deals &amp; Tips</h3>
+          <p class="mb-0 text-muted">Get Siargao travel tips, hotel deals, and more in your inbox!</p>
+        </div>
+      </div>
+      <form method="post" action="{{ url_for('public.subscribe') }}" class="newsletter-form">
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <input type="email" name="email" class="form-control" placeholder="Your email" required aria-label="Email">
+        <button class="btn btn-brand">Subscribe</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-3 col-md-6">
+        <h4>Need help?</h4>
+        <p class="mb-1 small text-uppercase opacity-75">Call Us</p>
+        <p><a href="tel:{{ S.phone }}" class="footer-strong">{{ S.phone }}</a></p>
+        <p class="mb-1 small text-uppercase opacity-75">Email for Us</p>
+        <p><a href="mailto:{{ S.email }}" class="footer-strong">{{ S.email }}</a></p>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <h4>Company</h4>
+        <ul class="list-unstyled">
+          <li><a href="/about-us/">About Us</a></li>
+          <li><a href="{{ url_for('public.blog') }}">Blog</a></li>
+          <li><a href="/privacy-policy/">Privacy Policy</a></li>
+          <li><a href="/terms-and-conditions/">Terms &amp; Conditions</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <h4>Products</h4>
+        <ul class="list-unstyled">
+          {% for k, m in KINDS.items() %}
+          <li><a href="{{ url_for('public.archive', archive=m.archive) }}">{{ 'Cars' if k == 'car' else m.plural }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="col-lg-3 col-md-6">
+        <h4>Settings</h4>
+        <p class="mb-1 small">Currencies</p>
+        <div class="btn-group mb-3" role="group" aria-label="Currency">
+          <a href="{{ url_for('public.set_currency', code='PHP') }}" class="btn btn-sm {{ 'btn-brand' if currency == 'PHP' else 'btn-outline-light' }}">PHP</a>
+          <a href="{{ url_for('public.set_currency', code='USD') }}" class="btn btn-sm {{ 'btn-brand' if currency == 'USD' else 'btn-outline-light' }}">USD</a>
+        </div>
+        <h4>Follow Us</h4>
+        <div class="socials">
+          <a href="{{ S.facebook }}" target="_blank" rel="noopener" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+          <a href="{{ S.instagram }}" target="_blank" rel="noopener" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+          <a href="{{ S.tiktok }}" target="_blank" rel="noopener" aria-label="TikTok"><i class="bi bi-tiktok"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr>
+    <p class="copyright">Copyright © {{ today()[:4] }} {{ S.site_name }}. All Rights Reserved. SiargaoHotels.ph is operated by {{ S.operator }}.</p>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

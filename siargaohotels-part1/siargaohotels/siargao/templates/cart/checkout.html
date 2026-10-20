@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Checkout - {{ S.site_name }}{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><h1>Booking details</h1></div></section>
+<section class="section pt-4"><div class="container">
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <form method="post" class="form-card">
+        <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+        <div class="row g-3">
+          <div class="col-md-6"><label class="form-label">Full name *</label><input name="name" class="form-control" required value="{{ form.get('name', '') }}"></div>
+          <div class="col-md-6"><label class="form-label">Email *</label><input type="email" name="email" class="form-control" required value="{{ form.get('email', '') }}"></div>
+          <div class="col-md-6"><label class="form-label">Phone / WhatsApp *</label><input name="phone" class="form-control" required value="{{ form.get('phone', '') }}"></div>
+          <div class="col-12"><label class="form-label">Special requests (flight details, pick-up, etc.)</label><textarea name="notes" rows="4" class="form-control">{{ form.get('notes', '') }}</textarea></div>
+          <div class="col-12"><div class="form-check"><input class="form-check-input" type="checkbox" name="accept" id="accept" required><label class="form-check-label" for="accept">I accept the <a href="/terms-and-conditions/" target="_blank">Terms &amp; Conditions</a></label></div></div>
+        </div>
+        <button class="btn btn-brand btn-lg mt-3">Submit booking request</button>
+        <p class="small text-muted mt-2 mb-0">We'll confirm availability with the local partner and send payment instructions by email.</p>
+      </form>
+    </div>
+    <div class="col-lg-5">
+      <div class="booking-box">
+        <h2 class="h6 text-muted">Your booking</h2>
+        {% for ln in lines %}
+        <div class="d-flex justify-content-between border-bottom py-2 small"><span>{{ ln.item.title }}{% if ln.room %} — {{ ln.room.name }}{% endif %}<br><span class="text-muted">{{ ln.start }}{% if ln.end %} → {{ ln.end }}{% endif %} · {{ ln.desc }}</span></span><strong>{{ ln.subtotal | money }}</strong></div>
+        {% endfor %}
+        <div class="d-flex justify-content-between pt-3"><span>Total</span><strong class="fs-5">{{ total | money }}</strong></div>
+      </div>
+    </div>
+  </div>
+</div></section>
+{% endblock %}

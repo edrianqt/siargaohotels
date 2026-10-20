@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+instance/
+.env
+siargao/static/uploads/*
+!siargao/static/uploads/wp/
+!siargao/static/uploads/.gitkeep

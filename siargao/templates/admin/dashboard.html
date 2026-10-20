@@ -1,0 +1,39 @@
+{% extends "admin/base.html" %}
+{% block content %}
+<h1 class="h3 mb-4">Dashboard</h1>
+<div class="row g-3 mb-4">
+  {% for label, n in stats.items() %}
+  <div class="col-6 col-md-3"><div class="stat-tile"><span>{{ label }}</span><strong>{{ n }}</strong></div></div>
+  {% endfor %}
+</div>
+<div class="row g-4">
+  <div class="col-xl-7">
+    <div class="admin-card">
+      <div class="d-flex justify-content-between align-items-center mb-2"><h2 class="h6 mb-0">Latest bookings</h2><a href="{{ url_for('admin.list_view', name='bookings') }}" class="small">All bookings</a></div>
+      <table class="table table-sm align-middle mb-0">
+        <thead><tr><th>Ref</th><th>Guest</th><th>Total</th><th>Status</th></tr></thead>
+        <tbody>{% for b in bookings %}
+          <tr><td><a href="{{ url_for('admin.edit_view', name='bookings', row_id=b.id) }}">{{ b.ref }}</a></td><td>{{ b.name }}</td><td>₱{{ '{:,.0f}'.format(b.total) }}</td><td><span class="badge status-{{ b.status }}">{{ b.status }}</span></td></tr>
+        {% else %}<tr><td colspan="4" class="text-muted">No bookings yet.</td></tr>{% endfor %}</tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-xl-5">
+    <div class="admin-card mb-4">
+      <h2 class="h6">Reviews waiting for approval</h2>
+      {% for r in reviews %}
+      <div class="d-flex justify-content-between align-items-start border-bottom py-2 small">
+        <div><strong>{{ r.name }}</strong> on {{ r.listing }}<br><span class="text-muted">{{ r.body[:90] }}…</span></div>
+        <form method="post" action="{{ url_for('admin.approve_review', row_id=r.id) }}"><input type="hidden" name="_csrf" value="{{ csrf_token() }}"><button class="btn btn-sm btn-success">Approve</button></form>
+      </div>
+      {% else %}<p class="text-muted small mb-0">Nothing to approve.</p>{% endfor %}
+    </div>
+    <div class="admin-card">
+      <h2 class="h6">Latest messages</h2>
+      {% for msg in messages %}
+      <a class="d-block border-bottom py-2 small text-decoration-none" href="{{ url_for('admin.edit_view', name='messages', row_id=msg.id) }}"><strong>{{ msg.name }}</strong> · {{ msg.subject or 'Contact form' }}<br><span class="text-muted">{{ msg.message[:90] }}</span></a>
+      {% else %}<p class="text-muted small mb-0">No messages yet.</p>{% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

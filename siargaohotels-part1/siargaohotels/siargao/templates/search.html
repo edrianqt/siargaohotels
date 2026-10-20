@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% import "partials/macros.html" as m with context %}
+{% block title %}Search{% if q %}: {{ q }}{% endif %} - {{ S.site_name }}{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container">
+  <h1>Search</h1>
+  <form class="d-flex gap-2 mt-3" method="get"><input name="q" class="form-control form-control-lg" value="{{ q }}" placeholder="Hotels, tours, cars, articles…" aria-label="Search"><button class="btn btn-brand px-4">Search</button></form>
+</div></section>
+<section class="section pt-4"><div class="container">
+  {% if q %}
+    <p class="text-muted">{{ results|length + posts|length }} result(s) for “{{ q }}”</p>
+    {% if results %}<div class="row g-4 mb-5">{% for i in results %}<div class="col-sm-6 col-lg-3">{{ m.listing_card(i) }}</div>{% endfor %}</div>{% endif %}
+    {% if posts %}<h2 class="section-title">Articles</h2><div class="row g-4">{% for p in posts %}<div class="col-sm-6 col-lg-3">{% include "partials/post_card.html" %}</div>{% endfor %}</div>{% endif %}
+  {% endif %}
+</div></section>
+{% endblock %}

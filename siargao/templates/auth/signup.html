@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign Up - {{ S.site_name }}{% endblock %}
+{% block content %}
+<section class="section"><div class="container auth-wrap">
+  <form method="post" class="form-card">
+    <h1 class="h3 mb-4">Sign Up</h1>
+    <input type="hidden" name="_csrf" value="{{ csrf_token() }}">
+    <input type="hidden" name="next" value="{{ request.args.get('next', '') }}">
+    <label class="form-label" for="s-name">Full name</label><input id="s-name" name="name" class="form-control mb-3" required value="{{ request.form.get('name', '') }}">
+    <label class="form-label" for="s-email">Email</label><input id="s-email" type="email" name="email" class="form-control mb-3" required value="{{ request.form.get('email', '') }}">
+    <label class="form-label" for="s-pw">Password</label><input id="s-pw" type="password" name="password" class="form-control mb-3" required minlength="8">
+    <div class="form-check mb-3"><input class="form-check-input" type="checkbox" name="accept" id="accept" required><label class="form-check-label" for="accept">I have read and accept the <a href="/terms-and-conditions/" target="_blank">Terms</a> and <a href="/privacy-policy/" target="_blank">Privacy Policy</a></label></div>
+    <button class="btn btn-brand w-100 btn-lg">Create account</button>
+    <p class="text-center mt-3 mb-0">Already have an account? <a href="{{ url_for('auth.login') }}">Log In</a></p>
+  </form>
+</div></section>
+{% endblock %}

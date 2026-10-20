@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ category.name if category else 'Blog' }} - {{ S.site_name }}{% endblock %}
+{% block content %}
+<section class="page-head">
+  <div class="container">
+    <nav aria-label="breadcrumb"><ol class="breadcrumb small"><li class="breadcrumb-item"><a href="{{ url_for('public.home') }}">Home</a></li>
+      {% if category %}<li class="breadcrumb-item"><a href="{{ url_for('public.blog') }}">Blog</a></li><li class="breadcrumb-item active">{{ category.name }}</li>{% else %}<li class="breadcrumb-item active">Blog</li>{% endif %}</ol></nav>
+    <h1>{{ category.name if category else 'Siargao Island Travel Tips' }}</h1>
+  </div>
+</section>
+<section class="section pt-4">
+  <div class="container">
+    {% if categories %}
+    <div class="chips mb-4">
+      <a href="{{ url_for('public.blog') }}" class="chip {{ 'active' if not category }}">All</a>
+      {% for c in categories %}<a href="{{ url_for('public.category', slug=c.slug) }}" class="chip {{ 'active' if category and category.id == c.id }}">{{ c.name }}</a>{% endfor %}
+    </div>
+    {% endif %}
+    {% if posts %}
+    <div class="row g-4">{% for p in posts %}<div class="col-sm-6 col-lg-4">{% include "partials/post_card.html" %}</div>{% endfor %}</div>
+    {% if pages > 1 %}
+    <nav class="mt-4" aria-label="Pagination"><ul class="pagination justify-content-center">
+      {% for n in range(1, pages + 1) %}
+      <li class="page-item {{ 'active' if n == page }}"><a class="page-link" href="{{ (url_for('public.category', slug=category.slug, page=n) if category else url_for('public.blog', page=n)) if n > 1 else (url_for('public.category', slug=category.slug) if category else url_for('public.blog')) }}">{{ n }}</a></li>
+      {% endfor %}
+    </ul></nav>
+    {% endif %}
+    {% else %}
+    <div class="empty-state"><i class="bi bi-journal"></i><h3>No articles yet</h3></div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

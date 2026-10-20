@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Page not found - {{ S.site_name }}{% endblock %}
+{% block content %}
+<section class="section"><div class="container"><div class="empty-state">
+  <i class="bi bi-compass"></i><h1 class="h3">Looks like this wave passed</h1>
+  <p>The page you're looking for doesn't exist or has moved.</p>
+  <form action="{{ url_for('public.search') }}" class="d-flex gap-2 justify-content-center my-3"><input name="q" class="form-control" style="max-width:320px" placeholder="Search the site" aria-label="Search"><button class="btn btn-brand">Search</button></form>
+  <a href="{{ url_for('public.home') }}" class="btn btn-outline-brand">Back to home</a>
+</div></div></section>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Your Cart - {{ S.site_name }}{% endblock %}
+{% block content %}
+<section class="page-head"><div class="container"><h1>Your Cart</h1></div></section>
+<section class="section pt-4"><div class="container">
+  {% if lines %}
+  <div class="row g-4">
+    <div class="col-lg-8">
+      {% for ln in lines %}
+      <div class="cart-line">
+        {% if ln.item.image_url %}<img src="{{ ln.item.image_url }}" alt="{{ ln.item.title }}">{% endif %}
+        <div class="flex-grow-1">
+          <h3 class="h6 mb-1"><a href="{{ ln.url }}">{{ ln.item.title }}</a></h3>
+          {% if ln.room %}<p class="small mb-1">{{ ln.room.name }}</p>{% endif %}
+          <p class="small text-muted mb-0">
+            {% if ln.start %}{{ ln.start | datefmt('%b %d, %Y') }}{% endif %}{% if ln.end %} → {{ ln.end | datefmt('%b %d, %Y') }}{% endif %}
+            · {{ ln.desc }}{% if ln.item.kind != 'car' %} · {{ ln.adults }} adult(s){% if ln.children %}, {{ ln.children }} child(ren){% endif %}{% endif %}
+          </p>
+        </div>
+        <div class="text-end">
+          <strong>{{ ln.subtotal | money }}</strong>
+          <form method="post" action="{{ url_for('cart.remove', idx=ln.idx) }}"><input type="hidden" name="_csrf" value="{{ csrf_token() }}"><button class="btn btn-link btn-sm text-danger p-0">Remove</button></form>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="col-lg-4">
+      <div class="booking-box">
+        <div class="d-flex justify-content-between mb-3"><span>Total</span><strong class="fs-4">{{ total | money }}</strong></div>
+        <a href="{{ url_for('cart.checkout') }}" class="btn btn-brand btn-lg w-100">Proceed to booking</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="empty-state"><i class="bi bi-bag"></i><h3>Your cart is empty</h3><a href="{{ url_for('public.home') }}" class="btn btn-brand">Start exploring</a></div>
+  {% endif %}
+</div></section>
+{% endblock %}

@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+{% import "partials/macros.html" as m with context %}
+{% block header_class %}header-overlay{% endblock %}
+{% block body_class %}page-home{% endblock %}
+{% block content %}
+
+<section class="hero" style="--hero: url('{{ S.hero_image | full }}')">
+  <div class="container hero-inner">
+    <p class="hero-kicker"><i class="bi bi-geo-alt-fill"></i> Siargao Island, Surigao del Norte</p>
+    <h1 class="hero-title">{{ S.tagline }}</h1>
+    <p class="hero-sub">Hotels, island tours, homes and car rentals from trusted locals — in one place.</p>
+
+    <div class="search-card">
+      <div class="search-tabs" role="tablist" aria-label="What are you booking?">
+        {% for k, label, icon in [('hotel','Stays','building'),('tour','Tours','compass'),('rental','Homes','house-door'),('car','Cars & scooters','car-front')] %}
+        <button class="search-tab {{ 'active' if loop.first }}" data-bs-toggle="tab" data-bs-target="#tab-{{ k }}" type="button" role="tab"
+                aria-selected="{{ 'true' if loop.first else 'false' }}" aria-controls="tab-{{ k }}">
+          <i class="bi bi-{{ icon }}"></i> {{ label }}
+        </button>
+        {% endfor %}
+        <span class="search-tab-ink" aria-hidden="true"></span>
+      </div>
+      <div class="tab-content">
+        {% for k in ['hotel', 'tour', 'rental', 'car'] %}
+        <div class="tab-pane fade {{ 'show active' if loop.first }}" id="tab-{{ k }}" role="tabpanel">{{ m.search_form(k, {}, locations) }}</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <svg class="hero-wave" viewBox="0 0 1440 120" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 64 C 180 108 360 108 540 70 C 720 32 900 20 1080 52 C 1260 84 1350 92 1440 76 L1440 120 L0 120 Z"/>
+  </svg>
+</section>
+
+<section class="section section-tight">
+  <div class="container">
+    <div class="service-strip">
+      {% for title, sub, archive, img in [
+          ('Stays', 'Hotels, homestays & hostels', 'hotels', 'https://siargaohotels.ph/wp-content/uploads/2025/11/hotels-in-general-luna-siargao-island-768x515.jpg'),
+          ('Tours', 'Island hopping, land tours & Sohoton', 'tours', 'https://siargaohotels.ph/wp-content/uploads/2025/11/siargao-island-package-tour-768x515.jpg'),
+          ('Homes', 'Villas & houses for rent', 'rentals', 'https://siargaohotels.ph/wp-content/uploads/2025/11/house-for-rent-in-siargao-island-768x515.jpg'),
+          ('Cars & scooters', 'Delivered to your hotel or the airport', 'car-and-motorcycle-rentals', 'https://siargaohotels.ph/wp-content/uploads/2025/11/rent-a-car-siargao-768x515.jpg')] %}
+      <a class="service-tile" href="{{ url_for('public.archive', archive=archive) }}">
+        <img src="{{ img | full }}" alt="" loading="lazy">
+        <span class="service-text"><strong>{{ title }}</strong><small>{{ sub }}</small></span>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="section island-section" id="island">
+  <div class="container">
+    <div class="row g-4 g-lg-5 align-items-center">
+      <div class="col-lg-7">
+        <h2 class="section-title mb-2">Find your corner of the island</h2>
+        <p class="text-muted mb-4">Surf town, lagoon country or the quiet north — tap a town to see where it is and what you can book there.</p>
+        <div class="island-map">
+          <svg viewBox="0 0 600 680" role="group" aria-label="Map of Siargao and Bucas Grande islands">
+            <defs>
+              <radialGradient id="shallows" cx="50%" cy="50%" r="50%">
+                <stop offset="72%" stop-color="var(--shallow)"/><stop offset="100%" stop-color="var(--shallow)" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+            <g class="sea-lines" aria-hidden="true">
+              <path d="M470 120 q25 -9 50 0 t50 0"/><path d="M500 330 q20 -8 40 0 t40 0"/>
+              <path d="M30 150 q20 -8 40 0 t40 0"/><path d="M380 640 q20 -8 40 0 t40 0"/>
+            </g>
+            <ellipse cx="335" cy="300" rx="215" ry="300" fill="url(#shallows)" aria-hidden="true"/>
+            <path class="land" d="M-10 592 C-3 572 15 583 30 582 C45 581 63 584 78 586 C93 588 107 591 118 596 C129 601 139 609 146 618 C153 627 157 634 158 648 C159 662 178 691 150 700 C122 709 17 718 -10 700 C-37 682 -17 612 -10 592 Z"/>
+            <path class="land" d="M178 604 C187 598 207 598 222 598 C237 598 253 601 268 606 C283 611 302 618 310 626 C318 634 320 641 318 652 C316 663 313 684 296 690 C279 696 234 694 214 690 C194 686 184 674 176 664 C168 654 168 642 168 632 C168 622 169 610 178 604 Z"/>
+            <g class="land islets-west" aria-hidden="true">
+              <ellipse cx="36" cy="302" rx="30" ry="17"/><ellipse cx="154" cy="230" rx="12" ry="22"/><ellipse cx="118" cy="282" rx="18" ry="11"/><ellipse cx="146" cy="420" rx="32" ry="17"/><ellipse cx="186" cy="446" rx="22" ry="14"/><ellipse cx="96" cy="470" rx="26" ry="13"/><ellipse cx="183" cy="396" rx="15" ry="9"/><ellipse cx="70" cy="345" rx="14" ry="9"/>
+            </g>
+            <path class="land" d="M328 12 C334 12 341 16 345 22 C349 28 350 40 352 50 C354 60 355 75 358 85 C361 95 368 101 372 110 C376 119 377 130 379 140 C381 150 383 160 385 170 C387 180 387 190 389 200 C391 210 395 219 398 228 C401 237 404 244 406 252 C408 260 410 268 412 276 C414 284 414 293 416 302 C418 311 421 322 423 330 C425 338 428 345 427 352 C426 359 422 368 417 372 C412 376 403 378 399 378 C395 378 392 368 392 370 C392 372 396 384 402 388 C408 392 419 394 426 397 C433 400 440 402 446 406 C452 410 458 415 463 421 C468 427 474 434 479 441 C484 448 487 456 491 462 C495 468 498 473 502 478 C506 483 510 485 513 490 C516 495 518 501 518 507 C518 513 516 520 512 525 C508 530 501 532 494 535 C487 538 478 539 470 541 C462 543 453 546 445 548 C437 550 428 551 420 552 C412 553 403 554 395 556 C387 558 378 559 370 561 C362 563 354 566 345 569 C336 572 326 578 318 580 C310 582 302 583 294 582 C286 581 277 576 270 572 C263 568 256 563 250 558 C244 553 238 547 233 540 C228 533 225 524 222 515 C219 506 218 495 216 485 C214 475 212 465 213 456 C214 447 217 438 220 430 C223 422 227 416 229 410 C231 404 234 398 232 394 C230 390 226 386 220 384 C214 382 204 383 196 382 C188 381 179 381 172 378 C165 375 158 371 154 366 C150 361 148 353 150 348 C152 343 158 338 164 334 C170 330 181 329 188 325 C195 321 203 316 207 311 C211 306 213 301 213 294 C213 287 207 279 206 271 C205 263 206 254 208 246 C210 238 212 229 215 221 C218 213 223 204 228 196 C233 188 241 181 247 173 C253 165 258 158 262 150 C266 142 268 134 270 125 C272 116 274 105 276 95 C278 85 280 75 283 66 C286 57 291 47 296 40 C301 33 306 27 311 22 C316 17 322 12 328 12 Z"/>
+            <g class="islets" aria-hidden="true">
+              <ellipse cx="548" cy="560" rx="9" ry="4"/><circle cx="532" cy="590" r="8"/><circle cx="508" cy="606" r="6"/>
+            </g>
+            <text class="map-note" x="590" y="632">Naked, Daku &amp; Guyam</text>
+            <text class="map-sea" x="470" y="215">Pacific</text>
+            <text class="map-sea" x="470" y="233">Ocean</text>
+            <text class="map-sea" x="95" y="535" transform="rotate(38 95 535)">Dapa Channel</text>
+            <text class="map-place" x="60" y="664">Bucas Grande</text>
+            <g class="map-towns" aria-hidden="true">
+              <circle cx="300" cy="80" r="3"/><text x="292" y="84" text-anchor="end">Santa Monica</text>
+              <circle cx="352" cy="125" r="3"/><text x="344" y="129" text-anchor="end">Burgos</text>
+              <circle cx="222" cy="240" r="3"/><text x="230" y="244">San Benito</text>
+            </g>
+            <g class="compass" transform="translate(52 56)" aria-hidden="true">
+              <circle r="22"/><path d="M0 -16 L6 4 L0 0 L-6 4 Z"/><text y="-28">N</text>
+            </g>
+            {% set pins = {'general-luna-siargao': (500, 520, 'left', 5), 'dapa-siargao': (300, 576, 'right', 6),
+                           'socorro-siargao': (92, 628, 'right', 5), 'del-carmen-siargao': (166, 354, 'right', -12),
+                           'pilar-siargao': (392, 372, 'left', 5), 'san-isidro-siargao': (398, 224, 'left', 5)} %}
+            {% for p in map_points if p.slug in pins %}
+            {% set xy = pins[p.slug] %}
+            <g class="pin {{ 'active' if p.slug == 'general-luna-siargao' }}" data-slug="{{ p.slug }}" tabindex="0" role="button"
+               aria-label="{{ p.name }}" transform="translate({{ xy[0] }} {{ xy[1] }})">
+              <circle class="pin-pulse" r="16"/>
+              <circle class="pin-dot" r="8"/>
+              <text class="pin-label" x="{{ -14 if xy[2] == 'left' else 14 }}" y="{{ xy[3] }}" text-anchor="{{ 'end' if xy[2] == 'left' else 'start' }}">{{ p.name }}</text>
+            </g>
+            {% endfor %}
+          </svg>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <article class="town-card" aria-live="polite">
+          <img class="town-img" src="" alt="">
+          <div class="town-body">
+            <h3 class="town-name"></h3>
+            <p class="town-blurb"></p>
+            <ul class="town-counts">
+              <li><a class="t-stays" href="#"><strong></strong> stays</a></li>
+              <li><a class="t-tours" href="#"><strong></strong> tours</a></li>
+              <li><a class="t-cars" href="#"><strong></strong> cars & scooters</a></li>
+            </ul>
+            <a class="btn btn-brand town-link" href="#">Explore</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </div>
+  <script type="application/json" id="town-data">{{ map_points | tojson }}</script>
+  <script type="application/json" id="town-archives">{{ {'stays': url_for('public.archive', archive='hotels'), 'tours': url_for('public.archive', archive='tours'), 'cars': url_for('public.archive', archive='car-and-motorcycle-rentals')} | tojson }}</script>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="row g-4 g-lg-5 align-items-center">
+      <div class="col-lg-5">
+        <img class="img-fluid rounded-4 shadow-sm" src="{{ 'https://siargaohotels.ph/wp-content/uploads/2026/01/Siargao-Travel-Assistant-768x1012.jpg' | full }}" alt="Siargao Travel Assistant" loading="lazy">
+      </div>
+      <div class="col-lg-7 about-copy">
+        <h2>We live here, we stay here — let us help you book like a local</h2>
+        <p>At <strong>SiargaoHotels.ph</strong>, we help travelers plan their entire Siargao trip in one place. From choosing the <strong>right place to stay</strong> to booking <strong>tours and transportation</strong>, our goal is to make Siargao travel easier, more organized, and more enjoyable — even before you arrive.</p>
+        <p>Whether you’re coming to surf the world-famous <strong>Cloud 9</strong>, explore hidden lagoons, join island-hopping adventures, or slow down on quiet white-sand beaches, we guide you toward accommodations and experiences that match your <strong>travel style, budget, and pace</strong>. Instead of juggling multiple websites, messages, and recommendations, you’ll find everything you need right here.</p>
+        <p>Planning a trip to Siargao can feel overwhelming, especially with so many choices. That’s why we’ve built a <strong>curated, traveler-first platform</strong> featuring carefully selected <strong>hotels, resorts, house rentals, and homestays</strong> — from simple island stays to private beachfront villas. Every listing is reviewed with care, so you can book with confidence and know what to expect.</p>
+        <p>Beyond accommodations, we also connect you with <strong>trusted local tour operators</strong> offering island hopping, land tours, lagoon trips, and surf experiences, as well as <strong>reliable car and motorbike rentals</strong> that make exploring the island easy and flexible. All services are provided by vetted local partners who know Siargao best.</p>
+        <p>SiargaoHotels.ph is proudly built by <strong>locals and travelers who live, work, and explore here</strong>. We’re more than a booking website — we’re your <strong>Siargao travel assistant</strong>, offering practical guidance, honest recommendations, and up-to-date information to help you plan better and travel smarter.</p>
+        <p>Wherever your Siargao adventure takes you, we’re here to help you <strong>stay well, explore freely, and experience the island with confidence</strong>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if hotels %}
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2 class="section-title">Hotels In Siargao Island Philippines</h2><a href="{{ url_for('public.archive', archive='hotels') }}" class="see-all">View all <i class="bi bi-arrow-right"></i></a></div>
+    <div class="row g-4">{% for i in hotels %}<div class="col-sm-6 col-lg-3">{{ m.listing_card(i) }}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+{% if tours %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head"><h2 class="section-title">Siargao Tours</h2><a href="{{ url_for('public.archive', archive='tours') }}" class="see-all">View all <i class="bi bi-arrow-right"></i></a></div>
+    <div class="row g-4">{% for i in tours %}<div class="col-sm-6 col-lg-3">{{ m.listing_card(i) }}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+{% if rentals %}
+<section class="section">
+  <div class="container">
+    <div class="section-head"><h2 class="section-title">Homes &amp; Villas for Rent</h2><a href="{{ url_for('public.archive', archive='rentals') }}" class="see-all">View all <i class="bi bi-arrow-right"></i></a></div>
+    <div class="row g-4">{% for i in rentals %}<div class="col-sm-6 col-lg-3">{{ m.listing_card(i) }}</div>{% endfor %}</div>
+  </div>
+</section>
+{% endif %}
+
+{% if faqs %}
+<section class="section">
+  <div class="container">
+    <div class="row g-4 g-lg-5">
+      <div class="col-lg-5 d-none d-lg-block">
+        <img class="img-fluid rounded-4 sticky-top faq-img" src="{{ 'https://siargaohotels.ph/wp-content/uploads/2025/05/Cloud-9-Siargao-Island-Philippines-768x935.jpg' | full }}" alt="Cloud 9 Siargao Island Philippines" loading="lazy">
+      </div>
+      <div class="col-lg-7">
+        <h2 class="section-title">FAQS About Siargao Island, Philippines</h2>
+        <div class="accordion faq" id="faq">
+          {% for f in faqs %}
+          <div class="accordion-item">
+            <h3 class="accordion-header">
+              <button class="accordion-button {{ 'collapsed' if not loop.first }}" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ f.id }}">{{ f.question }}</button>
+            </h3>
+            <div id="faq{{ f.id }}" class="accordion-collapse collapse {{ 'show' if loop.first }}" data-bs-parent="#faq">
+              <div class="accordion-body">{{ f.answer | safe }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% if posts %}
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head"><h2 class="section-title">Siargao Island Travel Tips</h2><a href="{{ url_for('public.blog') }}" class="see-all">All articles <i class="bi bi-arrow-right"></i></a></div>
+    <div class="row g-4">
+      {% for p in posts %}
+      <div class="col-sm-6 col-lg-3">{% include "partials/post_card.html" %}</div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock %}

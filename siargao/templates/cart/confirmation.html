@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Booking {{ booking.ref }} - {{ S.site_name }}{% endblock %}
+{% block content %}
+<section class="section"><div class="container narrow">
+  <div class="form-card text-center">
+    <i class="bi bi-check-circle-fill text-success display-4"></i>
+    <h1 class="h3 mt-3">Thank you, {{ booking.name.split()[0] }}!</h1>
+    <p>Your booking request <strong>{{ booking.ref }}</strong> has been received. Status: <span class="badge status-{{ booking.status }}">{{ booking.status | title }}</span></p>
+    <p class="text-muted">We'll email {{ booking.email }} once availability is confirmed.</p>
+  </div>
+  <div class="form-card mt-4">
+    {% for it in items %}
+    <div class="d-flex justify-content-between border-bottom py-2"><span>{{ it.title }}<br><small class="text-muted">{{ it.start_date }}{% if it.end_date %} → {{ it.end_date }}{% endif %} · {{ it.adults }} adult(s){% if it.children %}, {{ it.children }} child(ren){% endif %}</small></span><strong>{{ it.subtotal | money }}</strong></div>
+    {% endfor %}
+    <div class="d-flex justify-content-between pt-3"><span>Total</span><strong class="fs-5">{{ booking.total | money }}</strong></div>
+  </div>
+  <p class="text-center mt-4">Questions? Call <a href="tel:{{ S.phone }}">{{ S.phone }}</a> or email <a href="mailto:{{ S.email }}">{{ S.email }}</a>.</p>
+</div></section>
+{% endblock %}
